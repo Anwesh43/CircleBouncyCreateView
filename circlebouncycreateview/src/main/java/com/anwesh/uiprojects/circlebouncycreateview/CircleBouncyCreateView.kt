@@ -185,4 +185,26 @@ class CircleBouncyCreateView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : CircleBouncyCreateView) {
+
+        private val animator : Animator = Animator(view)
+        private val cbc : CircleBouncyCreate = CircleBouncyCreate(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            cbc.draw(canvas, paint)
+            animator.animate {
+                cbc.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            cbc.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
