@@ -208,4 +208,13 @@ class CircleBouncyCreateView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : CircleBouncyCreateView {
+            val view : CircleBouncyCreateView = CircleBouncyCreateView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
