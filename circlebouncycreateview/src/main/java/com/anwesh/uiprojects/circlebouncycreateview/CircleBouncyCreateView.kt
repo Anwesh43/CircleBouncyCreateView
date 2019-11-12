@@ -27,3 +27,30 @@ fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 fun Float.cosify() : Float = 1f - Math.sin(Math.PI / 2 + (Math.PI / 2) * this).toFloat()
+
+fun Canvas.drawCircleBouncyLine(i : Int, scale : Float, size : Float, h : Float, paint : Paint) {
+    val sf : Float = scale.sinify()
+    val y : Float = (h / 2 - size) * sf
+    val cy : Float = (h / 2 - size) * scale.divideScale(1, 2).cosify()
+    save()
+    scale(1f, 1f - 2 * i)
+    drawLine(0f, 0f, 0f, y, paint)
+    drawCircle(0f, cy, size, paint)
+    restore()
+}
+
+fun Canvas.drawCBCNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(gap * (i + 1), h / 2)
+    for (j in 0..1) {
+        drawCircleBouncyLine(i, scale, size, h, paint)
+    }
+    restore()
+}
