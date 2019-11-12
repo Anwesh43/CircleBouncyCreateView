@@ -30,12 +30,16 @@ fun Float.cosify() : Float = 1f - Math.sin(Math.PI / 2 + (Math.PI / 2) * this).t
 
 fun Canvas.drawCircleBouncyLine(i : Int, scale : Float, size : Float, h : Float, paint : Paint) {
     val sf : Float = scale.sinify()
-    val y : Float = (h / 2 - size) * sf
-    val cy : Float = (h / 2 - size) * scale.divideScale(1, 2).cosify()
+    val hf : Float = h / 2 - size
+    val y : Float = hf * sf
+    val cy : Float = hf - (hf) * scale.divideScale(1, 2).cosify()
     save()
     scale(1f, 1f - 2 * i)
     drawLine(0f, 0f, 0f, y, paint)
-    drawCircle(0f, cy, size, paint)
+    save()
+    translate(0f, cy)
+    drawArc(RectF(-size, -size, size, size), 0f, 180f, true, paint)
+    restore()
     restore()
 }
 
@@ -50,7 +54,7 @@ fun Canvas.drawCBCNode(i : Int, scale : Float, paint : Paint) {
     save()
     translate(gap * (i + 1), h / 2)
     for (j in 0..1) {
-        drawCircleBouncyLine(i, scale, size, h, paint)
+        drawCircleBouncyLine(j, scale, size, h, paint)
     }
     restore()
 }
@@ -127,7 +131,7 @@ class CircleBouncyCreateView(ctx : Context) : View(ctx) {
         private var prev : CBCNode? = null
 
         init {
-
+            addNeighbor()
         }
 
         fun addNeighbor() {
